@@ -2,13 +2,16 @@ const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const dotenv = require("dotenv").config()
+const morgan = require("morgan")
 
 const { readdirSync } = require("fs")
-const database = require("././config/database.js")
-const { errorHandler } = require("./middlewares/errorHandler")
+const database = require("./config/database.js")
+// const { errorHandler } = require("./middlewares/errorHandler.js")
 
 
 const app = express();
+
+// Middlewares
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -16,20 +19,22 @@ app.use(
   })
 );
 app.use(cors())
-
+app.use(morgan('dev'))
 
 //routes
 readdirSync("./routes").map((r) => app.use("/", require("./routes/" + r)));
 
-// error handler
-app.use(errorHandler);
+// // error handler
+// app.use(errorHandler);
 
 // database
 mongoose.set("strictQuery", true);
 database();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+
 
