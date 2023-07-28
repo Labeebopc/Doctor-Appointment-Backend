@@ -5,7 +5,7 @@ const asyncHandler = require("express-async-handler");
 const { generateToken } = require("../helpers/jwt-token.js")
 
 //@disc User Registration
-//@api POST /userRegistration
+//@api POST /user_registration
 //@access Private
 
 exports.userRegistration = asyncHandler(async (req, res) => {
@@ -32,7 +32,7 @@ exports.userRegistration = asyncHandler(async (req, res) => {
 
 
 //@disc User Login
-//@api POST /userLogin
+//@api POST /user_login
 //@access Public
 exports.userLogin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
@@ -66,3 +66,23 @@ exports.userLogin = asyncHandler(async (req, res) => {
 
     }
 });
+
+
+//@disc Get User Data
+//@api POST /get_user_data
+//@access Public
+exports.getUserData = asyncHandler(async (req, res) => {
+    const { id } = req.user
+    try {
+
+        const user = await User.findOne({ _id: id })
+        if (!user) {
+            return res.status(404).json({ status: false, message: "User not found" })
+        }
+        return res.status(200).json({ status: true, user: { id: user._id, name: user.name, email: user.email } })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ status: false, message: "Auth error" })
+    }
+})
