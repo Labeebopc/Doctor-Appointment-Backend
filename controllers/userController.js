@@ -7,7 +7,6 @@ const { generateToken } = require("../helpers/jwt-token.js")
 //@disc User Registration
 //@api POST /user_registration
 //@access Private
-
 exports.userRegistration = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -15,7 +14,7 @@ exports.userRegistration = asyncHandler(async (req, res) => {
         const existingUser = await User.findOne({ email: email })
         if (existingUser) {
 
-            return res.status(400).json({ message: "User Already Exists" })
+            return res.status(400).json({ status: false, message: "User Already Exists" })
         }
         if (!existingUser) {
             const hashedPassword = await bcrypt.hash(password, 12)
@@ -44,6 +43,7 @@ exports.userLogin = asyncHandler(async (req, res) => {
     try {
 
         const existingUser = await User.findOne({ email }).select("+password")
+
         if (!existingUser) {
             return res.status(404).json({ status: false, message: "Invalid Credentials" })
         }
@@ -57,12 +57,12 @@ exports.userLogin = asyncHandler(async (req, res) => {
         // jwt token
         const token = await generateToken({ id: existingUser._id }, "1d")
 
-        return res.status(200).json({ status: true, result: existingUser, token, message: "Successfully Logged in" })
+        return res.status(200).json({ status: true, existingUser, token, message: "Successfully Logged in" })
 
 
     } catch (error) {
 
-        return res.status(500).json({ status: false, message: "Login Failed" })
+        return res.status(500).json({ status: false, message: error.message })
 
     }
 });
