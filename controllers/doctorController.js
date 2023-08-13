@@ -21,21 +21,7 @@ exports.applyDoctor = asyncHandler(async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 12)
 
             const newDoctor = await Doctor.create({ ...req.body, password: hashedPassword })
-            // const newDoctor = await Doctor.create({ ...req.body})
-            // console.log(newDoctor,"55")
-            // const adminUser = await User.findOne({ isAdmin: true })
-            // console.log(adminUser.notification)
-            // const notification = await adminUser.notification.push({
-            //     type: "apply_doctor_request",
-            //     message: `${newDoctor.firstName} ${newDoctor.lastName} has applied for a doctor account!`,
-            //     data: {
-            //         doctorId: newDoctor._id,
-            //         name: `${newDoctor.firstName} ${newDoctor.lastName}`,
-            //         onClickPath: "/admin/doctors"
-            //     }
-            // })
-            // Assuming you have already imported and defined your User model
-
+     
             // Find the admin user
             const adminUser = await User.findOne({ isAdmin: true });
             if (adminUser) {
