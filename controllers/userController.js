@@ -6,7 +6,7 @@ const { generateToken } = require("../helpers/jwt-token.js")
 
 //@disc User Registration
 //@api POST /user_registration
-//@access Private
+//@access Public
 exports.userRegistration = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -70,7 +70,7 @@ exports.userLogin = asyncHandler(async (req, res) => {
 
 //@disc Get User Data
 //@api POST /get_user_data
-//@access Public
+//@access Private
 exports.getUserData = asyncHandler(async (req, res) => {
     const { id } = req.user
     try {
@@ -84,5 +84,27 @@ exports.getUserData = asyncHandler(async (req, res) => {
     } catch (error) {
         console.log(error)
         return res.status(500).json({ status: false, message: "Auth error" })
+    }
+})
+
+//@disc Get All Notification
+//@api GET /get_all_notification
+//@access Private
+exports.getAllNotification = asyncHandler(async (req, res) => {
+    // const { id } = req.user
+    const { id } = req.params
+    try {
+
+        const adminUser = await User.findOne({ _id: id });
+
+        if (!adminUser) {
+            return res.status(404).json({ status: false, message: "Admin not found" })
+        }
+        
+        return res.status(200).json({ status: true, notification: adminUser.notification })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ status: false, message: error.message })
     }
 })
