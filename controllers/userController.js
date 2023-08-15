@@ -14,14 +14,14 @@ exports.userRegistration = asyncHandler(async (req, res) => {
         const existingUser = await User.findOne({ email: email })
         if (existingUser) {
 
-            return res.status(400).json({ status: false, message: "User Already Exists" })
+            return res.status(400).json({ status: false, message: "User already exists" })
         }
         if (!existingUser) {
             const hashedPassword = await bcrypt.hash(password, 12)
 
             const user = await User.create({ name, email, password: hashedPassword })
 
-            return res.status(201).json({ status: true, user, message: "Account Successfully Created" })
+            return res.status(201).json({ status: true, user, message: "Account successfully created" })
         }
 
     } catch (error) {
@@ -45,19 +45,19 @@ exports.userLogin = asyncHandler(async (req, res) => {
         const existingUser = await User.findOne({ email }).select("+password")
 
         if (!existingUser) {
-            return res.status(404).json({ status: false, message: "Invalid Credentials" })
+            return res.status(404).json({ status: false, message: "Invalid credentials" })
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
 
         if (!isPasswordCorrect) {
-            return res.status(404).json({ status: false, message: "Invalid Credentials" })
+            return res.status(404).json({ status: false, message: "Invalid credentials" })
         }
 
         // jwt token
         const token = await generateToken({ id: existingUser._id }, "1d")
 
-        return res.status(200).json({ status: true, existingUser, token, message: "Successfully Logged in" })
+        return res.status(200).json({ status: true, existingUser, token, message: "Successfully logged in" })
 
 
     } catch (error) {
