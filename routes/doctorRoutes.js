@@ -1,4 +1,4 @@
-const { getDoctorInfo } = require("../controllers/doctorController");
+const { getDoctorInfo, updateDoctorProfile } = require("../controllers/doctorController");
 
 const router = require("express").Router();
 
@@ -7,6 +7,9 @@ const router = require("express").Router();
 // router.get("/doctor/get_doctor_info/:id",getDoctorInfo)
 
 //GET_DOCTOR_INFO || POST
-router.post("/doctor/get_doctor_info",getDoctorInfo)
+router.post("/doctor/get_doctor_info", getDoctorInfo)
+
+//UPDATE_DOCTOR_PROFILE || POST
+router.post("/doctor/update_doctor_profile", updateDoctorProfile)
 
 module.exports = router;

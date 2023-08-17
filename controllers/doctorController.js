@@ -59,7 +59,7 @@ exports.applyDoctor = asyncHandler(async (req, res) => {
 })
 
 //@disc Get Doctor Info
-//@api GET /get_doctor_info
+//@api GET,POST /get_doctor_info
 //@access Private
 exports.getDoctorInfo = asyncHandler(async (req, res) => {
     /////////////// For GET Method ////////////////
@@ -71,6 +71,22 @@ exports.getDoctorInfo = asyncHandler(async (req, res) => {
 
         const doctor = await Doctor.findOne({ userId: id })
         return res.status(201).json({ status: true, doctor, message: "Doctor details fetched" })
+
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({ status: false, error: error.message })
+    }
+})
+
+//@disc Update Doctor Info
+//@api POST /update_doctor_profile
+//@access Private
+exports.updateDoctorProfile = asyncHandler(async (req, res) => {
+    const { userId } = req.body
+    try {
+
+        const updatedDoc = await Doctor.findByIdAndUpdate(userId, req.body, { new: true })
+        return res.status(201).json({ status: true, updatedDoc, message: "Doctor details fetched" })
 
     } catch (error) {
         console.log(error.message)

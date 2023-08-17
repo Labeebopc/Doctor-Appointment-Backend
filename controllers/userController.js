@@ -2,7 +2,8 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const User = require("../models/userModel.js")
 const asyncHandler = require("express-async-handler");
-const { generateToken } = require("../helpers/jwt-token.js")
+const { generateToken } = require("../helpers/jwt-token.js");
+const Doctor = require("../models/doctorModel.js");
 
 //@disc User Registration
 //@api POST /user_registration
@@ -102,6 +103,22 @@ exports.getAllNotification = asyncHandler(async (req, res) => {
         }
         
         return res.status(200).json({ status: true, notification: adminUser.notification })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ status: false, message: error.message })
+    }
+})
+
+//@disc Get All Doctors
+//@api GET /get_all_doctors
+//@access Private
+exports.getAllDoctors = asyncHandler(async (req, res) => {
+    try {
+
+        const allDoctors = await Doctor.find({confirmation:"Accepted"}).select('-password');
+
+        return res.status(200).json({ status: true, allDoctors })
 
     } catch (error) {
         console.log(error)
