@@ -62,11 +62,15 @@ exports.deleteDoctor = asyncHandler(async (req, res) => {
 //@access Private
 exports.changeConfirmationStatus = asyncHandler(async (req, res) => {
     const { id } = req.params
+    const { confirmationStats, userId } = req.body
     try {
 
-        const removeDoc = await Doctor.findByIdAndDelete({ _id: id });
+        const updatedDoc = await Doctor.findByIdAndUpdate(id, { confirmation: confirmationStats }, { new: true });
 
-        return res.status(200).json({ status: true, message: "Doctor successfully deleted" })
+        const updatedUser = await User.findByIdAndUpdate(updatedDoc.userId, { isDoctor: updatedDoc.confirmation === "Accepted" ? true : false }
+            , { new: true })
+
+        return res.status(200).json({ status: true, updatedDoc, updatedUser, message: "Doctor successfully updated" })
 
     } catch (error) {
         console.log(error)

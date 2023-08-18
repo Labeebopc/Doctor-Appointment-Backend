@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler");
 const { generateToken } = require("../helpers/jwt-token.js")
 
 
-//@disc Apply doctor
+//@disc Apply Doctor
 //@api POST /apply_doctor
 //@access Private
 exports.applyDoctor = asyncHandler(async (req, res) => {
@@ -15,13 +15,13 @@ exports.applyDoctor = asyncHandler(async (req, res) => {
         const existingDoctor = await Doctor.findOne({ email: email })
         if (existingDoctor) {
 
-            return res.status(400).json({ status: false, message: "Doctor Already Exists" })
+            return res.status(400).json({ status: false, message: "Doctor already exists" })
         }
         if (!existingDoctor) {
             const hashedPassword = await bcrypt.hash(password, 12)
 
             const newDoctor = await Doctor.create({ ...req.body, password: hashedPassword })
-     
+
             // Find the admin user
             const adminUser = await User.findOne({ isAdmin: true });
             if (adminUser) {
@@ -49,8 +49,44 @@ exports.applyDoctor = asyncHandler(async (req, res) => {
 
             // await User.findByIdAndUpdate(adminUser._id, { notification })
 
-            return res.status(201).json({ status: true, newDoctor, message: "Doctor Successfully Applied" })
+            return res.status(201).json({ status: true, newDoctor, message: "Doctor successfully applied" })
         }
+
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({ status: false, error: error.message })
+    }
+})
+
+//@disc Get Doctor Info
+//@api GET,POST /get_doctor_info
+//@access Private
+exports.getDoctorInfo = asyncHandler(async (req, res) => {
+    /////////////// For GET Method ////////////////
+    // const { id } = req.params;
+
+    /////////////// For GET Method ////////////////
+    const { id } = req.body
+    try {
+
+        const doctor = await Doctor.findOne({ userId: id })
+        return res.status(201).json({ status: true, doctor, message: "Doctor details fetched" })
+
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({ status: false, error: error.message })
+    }
+})
+
+//@disc Update Doctor Info
+//@api POST /update_doctor_profile
+//@access Private
+exports.updateDoctorProfile = asyncHandler(async (req, res) => {
+    const { userId } = req.body
+    try {
+
+        const updatedDoc = await Doctor.findByIdAndUpdate(userId, req.body, { new: true })
+        return res.status(201).json({ status: true, updatedDoc, message: "Doctor details fetched" })
 
     } catch (error) {
         console.log(error.message)
