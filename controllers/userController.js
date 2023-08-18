@@ -146,7 +146,7 @@ exports.bookNewAppointment = asyncHandler(async (req, res) => {
   try {
     const newAppointment = await Appointment.create(req.body);
 
-    return res.status(200).json({ status: true, newAppointment, message:"Appointment booked" });
+    return res.status(200).json({ status: true, newAppointment, message: "Appointment booked" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, message: error.message });
