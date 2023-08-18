@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { applyDoctor } = require("../controllers/doctorController");
-const { userRegistration, userLogin, getUserData, getAllDoctors } = require("../controllers/userController");
+const { userRegistration, userLogin, getUserData, getAllDoctors, bookNewAppointment } = require("../controllers/userController");
 const { authUser } = require("../middlewares/auth-middleware");
 
 
@@ -18,5 +18,8 @@ router.post("/user/apply_doctor",authUser,applyDoctor)
 
 //GET_ALL_DOCTERS || GET
 router.get("/user/get_all_doctors",authUser,getAllDoctors)
+
+//BOOK_NEW_APPOINTMENT || POST
+router.post("/user/book_new_appointment",authUser, bookNewAppointment)
 
 module.exports = router;
