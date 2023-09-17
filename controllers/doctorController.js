@@ -82,11 +82,15 @@ exports.getDoctorInfo = asyncHandler(async (req, res) => {
 //@api POST /update_doctor_profile
 //@access Private
 exports.updateDoctorProfile = asyncHandler(async (req, res) => {
-    const { userId } = req.body
+    const { userId, _id } = req.body
+
     try {
 
-        const updatedDoc = await Doctor.findByIdAndUpdate(userId, req.body, { new: true })
-        return res.status(201).json({ status: true, updatedDoc, message: "Doctor details fetched" })
+        console.log(req.body)
+        const updatedDoc = await Doctor.findByIdAndUpdate(_id, {...req.body}, { new: true })
+
+        console.log(userId,updatedDoc )
+        return res.status(201).json({ status: true, updatedDoc, message: "Doctor details updated" })
 
     } catch (error) {
         console.log(error.message)
